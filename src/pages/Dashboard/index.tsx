@@ -9,7 +9,7 @@ import { FoodData } from '../../types';
 
 function Dashboard() {
   const [foods, setFoods] = useState<FoodData[]>([]);
-  const [editingFood, setEditingFood] = useState<any>({});
+  const [editingFood, setEditingFood] = useState<FoodData>({} as FoodData);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -33,7 +33,7 @@ function Dashboard() {
 
   async function handleUpdateFood(food: FoodData) {
     try {
-      const foodUpdated = await api.put<FoodData>(
+      const foodUpdated = await api.put(
         `/foods/${editingFood.id}`,
         { ...editingFood, ...food },
       );
@@ -42,9 +42,7 @@ function Dashboard() {
         f.id !== foodUpdated.data.id ? f : foodUpdated.data,
       );
 
-      console.log(foodUpdated.data);
-
-      setEditingFood(foodsUpdated);
+      setFoods(foodsUpdated);
     } catch (err) {
       console.log(err);
     }
@@ -63,12 +61,12 @@ function Dashboard() {
   }
 
   function toggleEditModal() {
-    setEditModalOpen(!toggleModal);
+    setEditModalOpen(!editModalOpen);
   }
 
   function handleEditFood(food: FoodData) {
     setEditingFood(food);
-    setEditModalOpen(!modalOpen);
+    setEditModalOpen(true);
   }
 
   return (
